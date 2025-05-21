@@ -105,7 +105,7 @@ d3.csv("weather.csv").then(data => {
         .attr("x", width / 2)
         .attr("y", height + 40)
         .attr("text-anchor", "middle")
-        .text("Month (Numeric)");
+        .text("Month");
 
     svg1_RENAME.append("text")
         .attr("transform", "rotate(-90)")
