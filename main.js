@@ -22,7 +22,7 @@ const svg2_RENAME = d3.select("#lineChart2")
 d3.csv("weather.csv").then(data => {
     const parseDate = d3.timeParse("%m/%d/%Y");
     const formatMonth = d3.timeFormat("%Y-%m");
-    const citiesToInclude = ["Chicago", "Jacksonville", "Philadelphia", "Phoenix"];
+    const citiesToInclude = ["Chicago", "Jacksonville", "Philadelphia", "Phoenix", "Charlotte", "Indianapolis"];
 
     const monthlyData = {};
 
@@ -54,7 +54,7 @@ d3.csv("weather.csv").then(data => {
         values
     }));
 
-    // 3.a: SET SCALES
+    // 3.a: SET SCALES FOR CHART 1
     const xScale = d3.scaleTime()
         .domain(d3.extent(averaged, d => d.month))
         .range([0, width]);
@@ -85,22 +85,15 @@ d3.csv("weather.csv").then(data => {
         .attr("stroke-width", 2)
         .attr("d", d => line(d.values));
 
-    // 5.a: AXES
-    // svg1_RENAME.append("g")
-    //     .attr("transform", `translate(0, ${height})`)
-    //     .call(d3.axisBottom(xScale)
-    //         .ticks(12)
-    //         .tickFormat(d3.timeFormat("%m"))); // show month numbers (01–12)
+    // 5.a: AXES FOR CHART 1
     svg1_RENAME.append("g")
-    .attr("transform", `translate(0, ${height})`)
-    .call(d3.axisBottom(xScale)
-        .ticks(12)
-        .tickFormat(d3.timeFormat("%b '%y"))); // Month-Year
+        .attr("transform", `translate(0, ${height})`)
+        .call(d3.axisBottom(xScale).ticks(12).tickFormat(d3.timeFormat("%b '%y")));
 
     svg1_RENAME.append("g")
         .call(d3.axisLeft(yScale));
 
-    // 6.a: AXIS LABELS
+    // 6.a: LABELS FOR CHART 1
     svg1_RENAME.append("text")
         .attr("x", width / 2)
         .attr("y", height + 40)
@@ -113,15 +106,6 @@ d3.csv("weather.csv").then(data => {
         .attr("y", -50)
         .attr("text-anchor", "middle")
         .text("Average Temperature (°F)");
-
-    // // 6.b: CHART TITLE
-    // svg1_RENAME.append("text")
-    //     .attr("x", width / 2)
-    //     .attr("y", -30)
-    //     .attr("text-anchor", "middle")
-    //     .style("font-size", "18px")
-    //     .style("font-weight", "bold")
-    //     .text("Monthly Average Temperature by City (July 2014 – June 2015)");
 
     // 6.c: LEGEND
     const legend = svg1_RENAME.selectAll(".legend")
@@ -145,29 +129,63 @@ d3.csv("weather.csv").then(data => {
         .style("text-anchor", "start")
         .text(d => d.city);
 
-
-
-
-    // 7.a: ADD INTERACTIVITY FOR CHART 1
-    
-
     // ==========================================
-    //         CHART 2 (if applicable)
+    //         CHART 2 — PRECIPITATION
     // ==========================================
+
+    // 2.c: COMPUTE AVERAGE PRECIPITATION BY CITY
+    const precipitationByCity = d3.rollups(
+        data,
+        v => d3.mean(v, d => +d.actual_precipitation),  // Change column name if needed
+        d => d.city.trim()
+    );
+
+    // 2.d: Build array and sort for display
+    const precipitationData = precipitationByCity
+        .map(([city, precipitation]) => ({ city, precipitation }))
+        .filter(d => citiesToInclude.includes(d.city))
+        .sort((a, b) => a.precipitation - b.precipitation);
 
     // 3.b: SET SCALES FOR CHART 2
+    const xScale2 = d3.scaleBand()
+        .domain(precipitationData.map(d => d.city))
+        .range([0, width])
+        .padding(0.2);
 
+    const yScale2 = d3.scaleLinear()
+        .domain([0, d3.max(precipitationData, d => d.precipitation) + 0.05])
+        .range([height, 0]);
 
-    // 4.b: PLOT DATA FOR CHART 2
+    // 4.b: DRAW BARS
+    svg2_RENAME.selectAll("rect")
+        .data(precipitationData)
+        .enter()
+        .append("rect")
+        .attr("x", d => xScale2(d.city))
+        .attr("y", d => yScale2(d.precipitation))
+        .attr("width", xScale2.bandwidth())
+        .attr("height", d => height - yScale2(d.precipitation))
+        .attr("fill", "steelblue");
 
+    // 5.b: AXES FOR CHART 2
+    svg2_RENAME.append("g")
+        .attr("transform", `translate(0, ${height})`)
+        .call(d3.axisBottom(xScale2));
 
-    // 5.b: ADD AXES FOR CHART 
+    svg2_RENAME.append("g")
+        .call(d3.axisLeft(yScale2));
 
+    // 6.b: LABELS FOR CHART 2
+    svg2_RENAME.append("text")
+        .attr("x", width / 2)
+        .attr("y", height + 40)
+        .attr("text-anchor", "middle")
+        .text("City");
 
-    // 6.b: ADD LABELS FOR CHART 2
-
-
-    // 7.b: ADD INTERACTIVITY FOR CHART 2
-
-
+    svg2_RENAME.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("x", -height / 2)
+        .attr("y", -50)
+        .attr("text-anchor", "middle")
+        .text("Average Precipitation (inches)");
 });
