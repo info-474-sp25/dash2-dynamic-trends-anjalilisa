@@ -4,10 +4,60 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard 2</title>
-    <script src="https://d3js.org/d3.v7.min.js"></script> <!-- Load D3 library -->
-    <link rel="stylesheet" href="style.css"> <!-- Connect to style.css for styles -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+            background-color: #f9f9f9;
+        }
+        .vertical-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        .horizontal-container {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .item {
+            margin-bottom: 10px;
+        }
+        h1 {
+            margin-bottom: 0;
+            color: #333;
+        }
+        h2 {
+            margin-bottom: 10px;
+            color: #444;
+        }
+        select, button {
+            padding: 6px 10px;
+            font-size: 14px;
+        }
+        button {
+            background-color: #3366cc;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #274b99;
+        }
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 </head>
 <body class="vertical-container">
+
     <!-- HEADER -->
     <div class="item">
         <h1>Dash 2 - Dynamic Trends</h1>
@@ -16,9 +66,16 @@
             <a href="https://docs.google.com/document/d/1vtX3JPMaB1Swr-x6ppqvtWd8mVIsRMt_bvpy5IpdEkM/edit?tab=t.0" target="_blank">Click Here</a>
         </p>
     </div>
-    <div class="item horizontal-container">
+
+    <!-- RESET BUTTON ABOVE CHARTS -->
+    <div class="horizontal-container item">
+        <button id="resetAllFilters">🔄 Reset All Filters</button>
+    </div>
+
+    <!-- DROPDOWNS -->
+    <div class="horizontal-container item">
         <div class="item">
-            <label for="cityDropdown"><strong>Select City:</strong></label>
+            <label for="cityDropdown"><strong>Temperature Chart:</strong></label><br>
             <select id="cityDropdown">
                 <option value="All">All Cities</option>
                 <option value="Chicago">Chicago</option>
@@ -29,34 +86,32 @@
                 <option value="Indianapolis">Indianapolis</option>
             </select>
         </div>
-    
-        <!-- <div class="item">
-            <label><strong>Toggle Lines:</strong></label>
-            <button id="toggleLines">Hide Lines</button>
-        </div> -->
+
+        <div class="item">
+            <label for="precipDropdown"><strong>Precipitation Chart:</strong></label><br>
+            <select id="precipDropdown">
+                <option value="All">All Cities</option>
+                <option value="Chicago">Chicago</option>
+                <option value="Jacksonville">Jacksonville</option>
+                <option value="Philadelphia">Philadelphia</option>
+                <option value="Phoenix">Phoenix</option>
+                <option value="Charlotte">Charlotte</option>
+                <option value="Indianapolis">Indianapolis</option>
+            </select>
+        </div>
     </div>
 
-    <!-- CHART 1: Temperature Line Chart -->
-    <div class="item chart-container">
+    <!-- CHARTS -->
+    <div class="chart-container">
         <h2>Monthly Average Temperature by City (July 2014 – June 2015)</h2>
         <svg id="lineChart1" width="900" height="400"></svg>
     </div>
 
-    <!-- CHART 2: Precipitation Bar Chart -->
-    <div class="item chart-container">
+    <div class="chart-container">
         <h2>Average Precipitation by City (July 2014 – June 2015)</h2>
         <svg id="lineChart2" width="900" height="400"></svg>
     </div>
 
     <script src="main.js"></script>
-
-        <!-- INTERACTIVE WIDGETS -->
-        <!-- added earlier to show before graph -->
-
-            <div class="item"><!-- Your widget 2 code goes here. -->
-                <!-- Widget 2 title -->
-                <!-- Widget 2 element -->
-            </div>
-        </div>
 </body>
 </html>

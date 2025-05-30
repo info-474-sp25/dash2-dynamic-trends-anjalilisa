@@ -1,31 +1,22 @@
-// 1: SET GLOBAL VARIABLES
 const margin = { top: 70, right: 150, bottom: 60, left: 70 };
 const width = 900 - margin.left - margin.right;
 const height = 400 - margin.top - margin.bottom;
 
-// Create SVG containers for both charts
+// Create SVGs
 const svg1_RENAME = d3.select("#lineChart1")
-    .append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
     .append("g")
     .attr("transform", `translate(${margin.left},${margin.top})`);
 
 const svg2_RENAME = d3.select("#lineChart2")
-    .append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
     .append("g")
     .attr("transform", `translate(${margin.left},${margin.top})`);
 
-// 2.a: LOAD DATA
 d3.csv("weather.csv").then(data => {
     const parseDate = d3.timeParse("%m/%d/%Y");
     const formatMonth = d3.timeFormat("%Y-%m");
     const citiesToInclude = ["Chicago", "Jacksonville", "Philadelphia", "Phoenix", "Charlotte", "Indianapolis"];
 
     const monthlyData = {};
-
     data.forEach(d => {
         d.date = parseDate(d.date);
         d.city = d.city.trim();
@@ -33,29 +24,23 @@ d3.csv("weather.csv").then(data => {
 
         const month = formatMonth(d.date);
         const key = `${month}-${d.city}`;
-
         if (!monthlyData[key]) {
             monthlyData[key] = { month, city: d.city, temps: [] };
         }
-
         monthlyData[key].temps.push(+d.actual_mean_temp);
     });
 
-
-    // 2.b: AVERAGE THE MONTHLY TEMPERATURES
     const averaged = Object.values(monthlyData).map(entry => ({
         month: d3.timeParse("%Y-%m")(entry.month),
         city: entry.city,
         temperature: d3.mean(entry.temps)
     }));
 
-    // Group data by city
     const grouped = Array.from(d3.group(averaged, d => d.city), ([key, values]) => ({
         city: key,
         values
     }));
 
-    // 3.a: SET SCALES FOR CHART 1
     const xScale = d3.scaleTime()
         .domain(d3.extent(averaged, d => d.month))
         .range([0, width]);
@@ -71,7 +56,6 @@ d3.csv("weather.csv").then(data => {
         .domain(grouped.map(d => d.city))
         .range(d3.schemeTableau10);
 
-    // 4.a: DRAW LINES
     const line = d3.line()
         .x(d => xScale(d.month))
         .y(d => yScale(d.temperature));
@@ -86,15 +70,12 @@ d3.csv("weather.csv").then(data => {
         .attr("stroke-width", 2)
         .attr("d", d => line(d.values));
 
-    // 5.a: AXES FOR CHART 1
     svg1_RENAME.append("g")
         .attr("transform", `translate(0, ${height})`)
         .call(d3.axisBottom(xScale).ticks(12).tickFormat(d3.timeFormat("%b '%y")));
 
-    svg1_RENAME.append("g")
-        .call(d3.axisLeft(yScale));
+    svg1_RENAME.append("g").call(d3.axisLeft(yScale));
 
-    // 6.a: LABELS FOR CHART 1
     svg1_RENAME.append("text")
         .attr("x", width / 2)
         .attr("y", height + 40)
@@ -108,7 +89,6 @@ d3.csv("weather.csv").then(data => {
         .attr("text-anchor", "middle")
         .text("Average Temperature (°F)");
 
-    // 6.c: LEGEND
     const legend = svg1_RENAME.selectAll(".legend")
         .data(grouped)
         .enter()
@@ -129,51 +109,27 @@ d3.csv("weather.csv").then(data => {
         .style("font-size", "12px")
         .style("text-anchor", "start")
         .text(d => d.city);
-    let linesVisible = true;
 
     d3.select("#cityDropdown").on("change", function () {
-     const selected = this.value;
-
-     svg1_RENAME.selectAll(".line")
-        .style("opacity", d => selected === "All" || d.city === selected ? 1 : 0.1);
-
-     svg1_RENAME.selectAll(".legend")
-        .style("opacity", d => selected === "All" || d.city === selected ? 1 : 0.3);
-});
-
-    d3.select("#toggleLines").on("click", function () {
-        linesVisible = !linesVisible;
-
+        const selected = this.value;
         svg1_RENAME.selectAll(".line")
-            .style("display", linesVisible ? null : "none");
-
-     svg1_RENAME.selectAll(".legend")
-        .style("display", linesVisible ? null : "none");
-
-     this.textContent = linesVisible ? "Hide Lines" : "Show Lines";
+            .style("opacity", d => selected === "All" || d.city === selected ? 1 : 0.1);
+        svg1_RENAME.selectAll(".legend")
+            .style("opacity", d => selected === "All" || d.city === selected ? 1 : 0.3);
     });
-    
 
-
-
-    // ==========================================
-    //         CHART 2 — PRECIPITATION
-    // ==========================================
-
-    // 2.c: COMPUTE AVERAGE PRECIPITATION BY CITY
+    // CHART 2 — PRECIPITATION
     const precipitationByCity = d3.rollups(
         data,
-        v => d3.mean(v, d => +d.actual_precipitation),  // Change column name if needed
+        v => d3.mean(v, d => +d.actual_precipitation),
         d => d.city.trim()
     );
 
-    // 2.d: Build array and sort for display
     const precipitationData = precipitationByCity
         .map(([city, precipitation]) => ({ city, precipitation }))
         .filter(d => citiesToInclude.includes(d.city))
         .sort((a, b) => a.precipitation - b.precipitation);
 
-    // 3.b: SET SCALES FOR CHART 2
     const xScale2 = d3.scaleBand()
         .domain(precipitationData.map(d => d.city))
         .range([0, width])
@@ -183,7 +139,6 @@ d3.csv("weather.csv").then(data => {
         .domain([0, d3.max(precipitationData, d => d.precipitation) + 0.05])
         .range([height, 0]);
 
-    // 4.b: DRAW BARS
     svg2_RENAME.selectAll("rect")
         .data(precipitationData)
         .enter()
@@ -194,15 +149,12 @@ d3.csv("weather.csv").then(data => {
         .attr("height", d => height - yScale2(d.precipitation))
         .attr("fill", "steelblue");
 
-    // 5.b: AXES FOR CHART 2
     svg2_RENAME.append("g")
         .attr("transform", `translate(0, ${height})`)
         .call(d3.axisBottom(xScale2));
 
-    svg2_RENAME.append("g")
-        .call(d3.axisLeft(yScale2));
+    svg2_RENAME.append("g").call(d3.axisLeft(yScale2));
 
-    // 6.b: LABELS FOR CHART 2
     svg2_RENAME.append("text")
         .attr("x", width / 2)
         .attr("y", height + 40)
@@ -215,4 +167,21 @@ d3.csv("weather.csv").then(data => {
         .attr("y", -50)
         .attr("text-anchor", "middle")
         .text("Average Precipitation (inches)");
+
+    d3.select("#precipDropdown").on("change", function () {
+        const selectedCity = this.value;
+        svg2_RENAME.selectAll("rect")
+            .style("display", d => selectedCity === "All" || d.city === selectedCity ? null : "none");
+    });
+
+    // Unified Reset for both filters
+    d3.select("#resetAllFilters").on("click", function () {
+        d3.select("#cityDropdown").property("value", "All");
+        d3.select("#precipDropdown").property("value", "All");
+
+        svg1_RENAME.selectAll(".line").style("opacity", 1);
+        svg1_RENAME.selectAll(".legend").style("opacity", 1);
+
+        svg2_RENAME.selectAll("rect").style("display", null);
+    });
 });
