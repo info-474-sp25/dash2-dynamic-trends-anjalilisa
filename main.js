@@ -41,6 +41,7 @@ d3.csv("weather.csv").then(data => {
         monthlyData[key].temps.push(+d.actual_mean_temp);
     });
 
+
     // 2.b: AVERAGE THE MONTHLY TEMPERATURES
     const averaged = Object.values(monthlyData).map(entry => ({
         month: d3.timeParse("%Y-%m")(entry.month),
@@ -128,6 +129,32 @@ d3.csv("weather.csv").then(data => {
         .style("font-size", "12px")
         .style("text-anchor", "start")
         .text(d => d.city);
+    let linesVisible = true;
+
+    d3.select("#cityDropdown").on("change", function () {
+     const selected = this.value;
+
+     svg1_RENAME.selectAll(".line")
+        .style("opacity", d => selected === "All" || d.city === selected ? 1 : 0.1);
+
+     svg1_RENAME.selectAll(".legend")
+        .style("opacity", d => selected === "All" || d.city === selected ? 1 : 0.3);
+});
+
+    d3.select("#toggleLines").on("click", function () {
+        linesVisible = !linesVisible;
+
+        svg1_RENAME.selectAll(".line")
+            .style("display", linesVisible ? null : "none");
+
+     svg1_RENAME.selectAll(".legend")
+        .style("display", linesVisible ? null : "none");
+
+     this.textContent = linesVisible ? "Hide Lines" : "Show Lines";
+    });
+    
+
+
 
     // ==========================================
     //         CHART 2 — PRECIPITATION
