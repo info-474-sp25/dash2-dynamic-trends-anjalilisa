@@ -67,38 +67,52 @@
         </p>
     </div>
 
-    <!-- RESET BUTTON ABOVE CHARTS -->
-    <div class="horizontal-container item">
-        <button id="resetAllFilters">🔄 Reset All Filters</button>
+<!-- FILTER BAR INSIDE HORIZONTAL CONTAINER -->
+<div class="horizontal-container item">
+    <div class="filter-bar">
+      <!-- Temperature Chart Multi-Select -->
+      <div class="filter-group">
+        <label><strong>Temperature Chart – Select Cities:</strong></label>
+        <div class="dropdown">
+          <button class="dropbtn">Select Cities ▼</button>
+          <div id="cityCheckboxes" class="dropdown-content">
+            <label><input type="checkbox" value="Chicago" checked> Chicago</label>
+            <label><input type="checkbox" value="Jacksonville" checked> Jacksonville</label>
+            <label><input type="checkbox" value="Philadelphia" checked> Philadelphia</label>
+            <label><input type="checkbox" value="Phoenix" checked> Phoenix</label>
+            <label><input type="checkbox" value="Charlotte" checked> Charlotte</label>
+            <label><input type="checkbox" value="Indianapolis" checked> Indianapolis</label>
+          </div>
+        </div>
+      </div>
+
+<!-- Bar Chart Multi-Select -->
+<div class="filter-group">
+    <label><strong>Precipitation Chart – Select Cities:</strong></label>
+    <div class="dropdown">
+      <button class="dropbtn">Select Cities ▼</button>
+      <div id="precipCheckboxes" class="dropdown-content">
+        <label><input type="checkbox" value="Chicago" checked> Chicago</label>
+        <label><input type="checkbox" value="Jacksonville" checked> Jacksonville</label>
+        <label><input type="checkbox" value="Philadelphia" checked> Philadelphia</label>
+        <label><input type="checkbox" value="Phoenix" checked> Phoenix</label>
+        <label><input type="checkbox" value="Charlotte" checked> Charlotte</label>
+        <label><input type="checkbox" value="Indianapolis" checked> Indianapolis</label>
+      </div>
     </div>
+  </div>
+  
+  
+      <!-- Reset Button -->
+      <div class="filter-group reset-button-container">
+        <label><strong>&nbsp;</strong></label> <!-- spacer for alignment -->
+        <button id="resetAllFilters">🔄 Reset All Filters</button>
+      </div>
+    </div>
+  </div>
+  
+        
 
-    <!-- DROPDOWNS -->
-    <div class="horizontal-container item">
-        <div class="item">
-            <label for="cityDropdown"><strong>Temperature Chart:</strong></label><br>
-            <select id="cityDropdown">
-                <option value="All">All Cities</option>
-                <option value="Chicago">Chicago</option>
-                <option value="Jacksonville">Jacksonville</option>
-                <option value="Philadelphia">Philadelphia</option>
-                <option value="Phoenix">Phoenix</option>
-                <option value="Charlotte">Charlotte</option>
-                <option value="Indianapolis">Indianapolis</option>
-            </select>
-        </div>
-
-        <div class="item">
-            <label for="precipDropdown"><strong>Precipitation Chart:</strong></label><br>
-            <select id="precipDropdown">
-                <option value="All">All Cities</option>
-                <option value="Chicago">Chicago</option>
-                <option value="Jacksonville">Jacksonville</option>
-                <option value="Philadelphia">Philadelphia</option>
-                <option value="Phoenix">Phoenix</option>
-                <option value="Charlotte">Charlotte</option>
-                <option value="Indianapolis">Indianapolis</option>
-            </select>
-        </div>
     </div>
 
     <!-- CHARTS -->

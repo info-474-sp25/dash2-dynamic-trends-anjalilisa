@@ -110,13 +110,19 @@ d3.csv("weather.csv").then(data => {
         .style("text-anchor", "start")
         .text(d => d.city);
 
-    d3.select("#cityDropdown").on("change", function () {
-        const selected = this.value;
-        svg1_RENAME.selectAll(".line")
-            .style("opacity", d => selected === "All" || d.city === selected ? 1 : 0.1);
-        svg1_RENAME.selectAll(".legend")
-            .style("opacity", d => selected === "All" || d.city === selected ? 1 : 0.3);
-    });
+     d3.selectAll("#cityCheckboxes input[type='checkbox']").on("change", function () {
+            const selectedCities = Array.from(
+                d3.selectAll("#cityCheckboxes input[type='checkbox']:checked").nodes()
+            ).map(d => d.value);
+        
+            svg1_RENAME.selectAll(".line")
+                .style("opacity", d => selectedCities.includes(d.city) ? 1 : 0.1);
+        
+            svg1_RENAME.selectAll(".legend")
+                .style("opacity", d => selectedCities.includes(d.city) ? 1 : 0.3);
+        });
+        
+
 
     // CHART 2 — PRECIPITATION
     const precipitationByCity = d3.rollups(
@@ -168,20 +174,31 @@ d3.csv("weather.csv").then(data => {
         .attr("text-anchor", "middle")
         .text("Average Precipitation (inches)");
 
-    d3.select("#precipDropdown").on("change", function () {
-        const selectedCity = this.value;
-        svg2_RENAME.selectAll("rect")
-            .style("display", d => selectedCity === "All" || d.city === selectedCity ? null : "none");
-    });
+     d3.selectAll("#precipCheckboxes input[type='checkbox']").on("change", function () {
+            const selectedCities = Array.from(
+              d3.selectAll("#precipCheckboxes input[type='checkbox']:checked").nodes()
+            ).map(d => d.value);
+          
+            svg2_RENAME.selectAll("rect")
+              .style("display", d => selectedCities.includes(d.city) ? null : "none");
+          });
+          
 
     // Unified Reset for both filters
     d3.select("#resetAllFilters").on("click", function () {
-        d3.select("#cityDropdown").property("value", "All");
-        d3.select("#precipDropdown").property("value", "All");
-
+        // Reset temperature line chart checkboxes
+        d3.selectAll("#cityCheckboxes input[type='checkbox']").property("checked", true);
+    
+        // Reset precipitation bar chart checkboxes
+        d3.selectAll("#precipCheckboxes input[type='checkbox']").property("checked", true);
+    
+        // Show all temperature lines and legends
         svg1_RENAME.selectAll(".line").style("opacity", 1);
         svg1_RENAME.selectAll(".legend").style("opacity", 1);
-
+    
+        // Show all bar chart rects
         svg2_RENAME.selectAll("rect").style("display", null);
     });
+    
+    
 });
