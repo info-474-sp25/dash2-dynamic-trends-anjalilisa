@@ -54,6 +54,18 @@
             border-radius: 8px;
             box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
         }
+        .dropdown-content {
+            display: none;
+            flex-direction: column;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+        }
+        .dropdown:hover .dropdown-content {
+            display: flex;
+        }
     </style>
 </head>
 <body class="vertical-container">
@@ -63,56 +75,53 @@
         <h1>Dash 2 - Dynamic Trends</h1>
         <p><strong>Author(s):</strong> Janis Kim & Anjali Schatzer</p>
         <p><strong>Documentation:</strong> 
-            <a href="https://docs.google.com/document/d/1vtX3JPMaB1Swr-x6ppqvtWd8mVIsRMt_bvpy5IpdEkM/edit?tab=t.0" target="_blank">Click Here</a>
+            <a href="https://docs.google.com/document/d/1KqqkwoPLAV5r11aMYMJVikpktZ9JaMgCQ7rterck1dY/edit?tab=t.0" target="_blank">Click Here</a>
         </p>
     </div>
 
-<!-- FILTER BAR INSIDE HORIZONTAL CONTAINER -->
-<div class="horizontal-container item">
-    <div class="filter-bar">
-      <!-- Temperature Chart Multi-Select -->
-      <div class="filter-group">
-        <label><strong>Temperature Chart – Select Cities:</strong></label>
-        <div class="dropdown">
-          <button class="dropbtn">Select Cities ▼</button>
-          <div id="cityCheckboxes" class="dropdown-content">
-            <label><input type="checkbox" value="Chicago" checked> Chicago</label>
-            <label><input type="checkbox" value="Jacksonville" checked> Jacksonville</label>
-            <label><input type="checkbox" value="Philadelphia" checked> Philadelphia</label>
-            <label><input type="checkbox" value="Phoenix" checked> Phoenix</label>
-            <label><input type="checkbox" value="Charlotte" checked> Charlotte</label>
-            <label><input type="checkbox" value="Indianapolis" checked> Indianapolis</label>
-          </div>
+    <!-- FILTER BAR INSIDE HORIZONTAL CONTAINER -->
+    <div class="horizontal-container item">
+        <div class="filter-bar">
+
+            <!-- Temperature Chart Multi-Select -->
+            <div class="filter-group">
+                <label><strong>Temperature Chart – Select Cities:</strong></label>
+                <div class="dropdown">
+                    <button class="dropbtn">Select Cities ▼</button>
+                    <div id="cityCheckboxes" class="dropdown-content">
+                        <label><input type="checkbox" value="Chicago" checked> Chicago</label>
+                        <label><input type="checkbox" value="Jacksonville" checked> Jacksonville</label>
+                        <label><input type="checkbox" value="Philadelphia" checked> Philadelphia</label>
+                        <label><input type="checkbox" value="Phoenix" checked> Phoenix</label>
+                        <label><input type="checkbox" value="Charlotte" checked> Charlotte</label>
+                        <label><input type="checkbox" value="Indianapolis" checked> Indianapolis</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bar Chart Multi-Select -->
+            <div class="filter-group">
+                <label><strong>Precipitation Chart – Select Cities:</strong></label>
+                <div class="dropdown">
+                    <button class="dropbtn">Select Cities ▼</button>
+                    <div id="precipCheckboxes" class="dropdown-content">
+                        <label><input type="checkbox" value="Chicago" checked> Chicago</label>
+                        <label><input type="checkbox" value="Jacksonville" checked> Jacksonville</label>
+                        <label><input type="checkbox" value="Philadelphia" checked> Philadelphia</label>
+                        <label><input type="checkbox" value="Phoenix" checked> Phoenix</label>
+                        <label><input type="checkbox" value="Charlotte" checked> Charlotte</label>
+                        <label><input type="checkbox" value="Indianapolis" checked> Indianapolis</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reset Button -->
+            <div class="filter-group reset-button-container">
+                <label><strong>&nbsp;</strong></label> <!-- spacer for alignment -->
+                <button id="resetAllFilters">🔄 Reset All Filters</button>
+            </div>
+
         </div>
-      </div>
-
-<!-- Bar Chart Multi-Select -->
-<div class="filter-group">
-    <label><strong>Precipitation Chart – Select Cities:</strong></label>
-    <div class="dropdown">
-      <button class="dropbtn">Select Cities ▼</button>
-      <div id="precipCheckboxes" class="dropdown-content">
-        <label><input type="checkbox" value="Chicago" checked> Chicago</label>
-        <label><input type="checkbox" value="Jacksonville" checked> Jacksonville</label>
-        <label><input type="checkbox" value="Philadelphia" checked> Philadelphia</label>
-        <label><input type="checkbox" value="Phoenix" checked> Phoenix</label>
-        <label><input type="checkbox" value="Charlotte" checked> Charlotte</label>
-        <label><input type="checkbox" value="Indianapolis" checked> Indianapolis</label>
-      </div>
-    </div>
-  </div>
-  
-  
-      <!-- Reset Button -->
-      <div class="filter-group reset-button-container">
-        <label><strong>&nbsp;</strong></label> <!-- spacer for alignment -->
-        <button id="resetAllFilters">🔄 Reset All Filters</button>
-      </div>
-    </div>
-  </div>
-  
-        
-
     </div>
 
     <!-- CHARTS -->
